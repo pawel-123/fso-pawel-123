@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBhd2VsMTIzIiwiaWQiOiI2MDNlNWIwMGY4MjM1MzE2MWI0ZGVjOTYiLCJpYXQiOjE2MTQ3NjU5MzJ9.FXIfPs79v9vbN7YDBs8NyxvtWinPfaDIK9DOJ_emut4
+
+{
+    "title": "Testing blog creation with token via middleware",
+    "author": "Tony Token",
+    "url": "http://333.com/new-one/token-middleware",
+    "likes": 1111111
+}
