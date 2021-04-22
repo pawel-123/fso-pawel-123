@@ -10,6 +10,4 @@ const userInDb = async (username) => {
     return user.toJSON()
 }
 
-const blogInDb
-
 module.exports = { usersInDb }
