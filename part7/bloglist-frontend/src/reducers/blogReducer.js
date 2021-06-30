@@ -14,10 +14,11 @@ const blogReducer = (state = [], action) => {
 export const initializeBlogs = () => {
   return async dispatch => {
     const blogs = await blogService.getAll()
+    const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
     dispatch({
       type: 'INIT_BLOGS',
       data: {
-        blogs
+        blogs: sortedBlogs
       }
     })
   }

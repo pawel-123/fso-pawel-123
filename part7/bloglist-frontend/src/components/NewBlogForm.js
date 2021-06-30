@@ -1,9 +1,31 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
+import { notificationError, notificationSuccess } from '../reducers/notificationReducer'
 
-const NewBlogForm = ({ addBlog }) => {
+const NewBlogForm = () => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
+
+  const dispatch = useDispatch()
+
+  const addBlog = async (newObject) => {
+    try {
+      // this doesn't work currently
+      // newBlogFormRef.current.toggleVisibility()
+      dispatch(createBlog(newObject))
+      dispatch(notificationSuccess(`Successfully added ${newObject.title} by ${newObject.author}`))
+      setTimeout(() => {
+        dispatch(notificationSuccess(null))
+      }, 5000)
+    } catch (error) {
+      dispatch(notificationError('Couldn\'t add the blog'))
+      setTimeout(() => {
+        dispatch(notificationError(null))
+      }, 5000)
+    }
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault()
