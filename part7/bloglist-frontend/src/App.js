@@ -7,25 +7,28 @@ import SuccessBox from './components/SuccessBox'
 import Togglable from './components/Togglable'
 import loginService from './services/login'
 import blogService from './services/blogs'
+import { initializeBlogs, createBlog } from './reducers/blogReducer'
 import { notificationError, notificationSuccess } from './reducers/notificationReducer'
 import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  // const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const errorMessage = useSelector(state => state.errorMessage)
-  const successMessage = useSelector(state => state.successMessage)
+  const blogs = useSelector(state => state.blogs)
+  const errorMessage = useSelector(state => state.notifications.errorMessage)
+  const successMessage = useSelector(state => state.notifications.successMessage)
 
   const newBlogFormRef = useRef()
   const dispatch = useDispatch()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-    )
+    // blogService.getAll().then(blogs =>
+    //   setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+    // )
+    dispatch(initializeBlogs())
   }, [])
 
   useEffect(() => {
@@ -95,9 +98,11 @@ const App = () => {
   const addBlog = async (newObject) => {
     try {
       newBlogFormRef.current.toggleVisibility()
-      const newBlog = await blogService.create(newObject)
-      setBlogs(blogs.concat(newBlog))
-      dispatch(notificationSuccess(`Successfully added ${newBlog.title} by ${newBlog.author}`))
+      // const newBlog = await blogService.create(newObject)
+      // setBlogs(blogs.concat(newBlog))
+      dispatch(createBlog(newObject))
+      // dispatch(notificationSuccess(`Successfully added ${newBlog.title} by ${newBlog.author}`))
+      dispatch(notificationSuccess('Successfully added new blog - fix this notification'))
       setTimeout(() => {
         dispatch(notificationSuccess(null))
       }, 5000)
@@ -116,12 +121,14 @@ const App = () => {
       }
       return blog
     })
-    setBlogs(updatedBlogs)
+    // setBlogs(updatedBlogs)
+    console.log(updatedBlogs)
   }
 
   const removeBlog = (blogId) => {
     const updatedBlogs = blogs.filter(blog => blog.id !== blogId)
-    setBlogs(updatedBlogs)
+    // setBlogs(updatedBlogs)
+    console.log(updatedBlogs)
   }
 
   return (
