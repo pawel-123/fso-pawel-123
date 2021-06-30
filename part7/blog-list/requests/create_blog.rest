@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Testing blog creation with token v3",
+    "author": "Tony Montana",
+    "url": "http://333.com/new-one/token",
+    "likes": 333
+}

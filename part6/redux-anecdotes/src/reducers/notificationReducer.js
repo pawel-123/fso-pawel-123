@@ -7,19 +7,30 @@ const notificationReducer = (state = '', action) => {
   }
 }
 
+// why does it run when an app gets initialized?
+let timeoutId
+console.log('after let timeoutId', timeoutId)
+
 export const setNotification = (notification, displayTime) => {
   return async dispatch => {
+    console.log('at the beginning of setNotification', timeoutId)
     dispatch({
       type: 'NOTIFICATION',
       notification
     })
-    setTimeout(() => 
+
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+
+    timeoutId = setTimeout(() => 
       dispatch({ 
         type: 'NOTIFICATION', 
         notification: '' 
       }), 
       displayTime * 1000
     )
+    console.log('after setTimeout in setNotification', timeoutId)
   }
 }
 
