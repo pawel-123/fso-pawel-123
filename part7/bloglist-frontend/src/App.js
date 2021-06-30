@@ -18,8 +18,8 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   const blogs = useSelector(state => state.blogs)
-  const errorMessage = useSelector(state => state.notifications.errorMessage)
-  const successMessage = useSelector(state => state.notifications.successMessage)
+  // const errorMessage = useSelector(state => state.notifications.errorMessage)
+  // const successMessage = useSelector(state => state.notifications.successMessage)
 
   const newBlogFormRef = useRef()
   const dispatch = useDispatch()
@@ -133,8 +133,8 @@ const App = () => {
 
   return (
     <div>
-      {errorMessage && <ErrorBox error={errorMessage} />}
-      {successMessage && <SuccessBox success={successMessage} />}
+      <ErrorBox />
+      <SuccessBox />
       {user === null ?
         loginForm() :
         blogSection()
