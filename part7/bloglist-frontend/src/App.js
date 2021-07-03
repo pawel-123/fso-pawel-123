@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { Switch, Route, Link, Redirect } from 'react-router-dom'
 import Login from './components/Login'
 import Blogs from './components/Blogs'
+import Users from './components/Users'
 import NewBlogForm from './components/NewBlogForm'
 import ErrorBox from './components/ErrorBox'
 import SuccessBox from './components/SuccessBox'
 import Togglable from './components/Togglable'
 import loginService from './services/login'
 import { setUser, removeUser } from './reducers/userReducer'
-import { initializeBlogs } from './reducers/blogReducer'
 import { notificationError, notificationSuccess } from './reducers/notificationReducer'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -21,14 +22,11 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(initializeBlogs())
-  }, [])
-
-  useEffect(() => {
     dispatch(setUser())
+    console.log('user in useEffect :', user)
   }, [])
 
-  const loginForm = () => (
+  const loginSection = () => (
     <div>
       <h2>Log in to application</h2>
       <Login username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLogin={handleLogin} />
@@ -73,14 +71,29 @@ const App = () => {
     dispatch(removeUser())
   }
 
+  console.log('user just before return :', user)
+
   return (
     <div>
+      <div>
+        <Link to='/'>Blogs</Link>
+        <Link to='/login'>Login</Link>
+        <Link to='/users'>Users</Link>
+      </div>
       <ErrorBox />
       <SuccessBox />
-      {user === null ?
-        loginForm() :
-        blogSection()
-      }
+
+      <Switch>
+        <Route path='/login'>
+          {user ? <Redirect to='/' /> : loginSection()}
+        </Route>
+        <Route path='/users'>
+          <Users />
+        </Route>
+        <Route path='/'>
+          {user === null ? <Redirect to='/login' /> : blogSection()}
+        </Route>
+      </Switch>
     </div>
   )
 }

@@ -12,17 +12,15 @@ const userReducer = (state = null, action) => {
 }
 
 export const setUser = () => {
-  return async dispatch => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
-    if (loggedUserJSON) {
-      const currentUser = JSON.parse(loggedUserJSON)
-      blogService.setToken(currentUser.token)
-      dispatch({
-        type: 'SET_USER',
-        data: {
-          currentUser
-        }
-      })
+  const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
+  if (loggedUserJSON) {
+    const currentUser = JSON.parse(loggedUserJSON)
+    blogService.setToken(currentUser.token)
+    return {
+      type: 'SET_USER',
+      data: {
+        currentUser
+      }
     }
   }
 }
