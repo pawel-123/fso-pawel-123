@@ -47,16 +47,9 @@ const App = () => {
           <NewBlogForm newBlogFormRef={newBlogFormRef}/>
         </Togglable>
         <p>{user.name} logged in <button onClick={handleLogout}>Log out</button></p>
-        {/* {blogs.map(blog =>
-          <Blog
-            key={blog.id}
-            blog={blog}
-            currentUsername={user.username}
-            updateBlog={() => updateBlog(blog.id)}
-            removeBlog={() => removeBlog(blog.id)}
-          />
-        )} */}
-        <Blogs />
+        <Blogs
+          currentUsername={user.username}
+        />
       </div>
     )
   }
@@ -87,23 +80,6 @@ const App = () => {
     window.localStorage.removeItem('loggedBloglistUser')
     setUser(null)
   }
-
-  // const updateBlog = (blogId) => {
-  //   const updatedBlogs = blogs.map(blog => {
-  //     if (blog.id === blogId) {
-  //       blog.likes = blog.likes + 1
-  //     }
-  //     return blog
-  //   })
-  //   // setBlogs(updatedBlogs)
-  //   console.log(updatedBlogs)
-  // }
-
-  // const removeBlog = (blogId) => {
-  //   const updatedBlogs = blogs.filter(blog => blog.id !== blogId)
-  //   // setBlogs(updatedBlogs)
-  //   console.log(updatedBlogs)
-  // }
 
   return (
     <div>
