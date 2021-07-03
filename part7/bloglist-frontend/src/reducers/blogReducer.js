@@ -6,6 +6,18 @@ const blogReducer = (state = [], action) => {
       return action.data.blogs
     case 'NEW_BLOG':
       return [...state, action.data.newBlog]
+    case 'LIKE_BLOG': {
+    //   const id = action.data.id
+    //   const blogToLike = state.blogs.find(blog => blog.id === id)
+    //   const likedBlog = {
+    //     ...blogToLike,
+    //     likes: blogToLike.likes + 1
+    //   }
+    //   return state.map(blog => blog.id === id ? likedBlog : blog)
+    // }
+      const likedBlog = action.data.likedBlog
+      return state.map(blog => likedBlog.id === blog.id ? likedBlog : blog)
+    }
     default:
       return state
   }
@@ -31,6 +43,18 @@ export const createBlog = newObject => {
       type: 'NEW_BLOG',
       data: {
         newBlog
+      }
+    })
+  }
+}
+
+export const likeBlog = blogId => {
+  return async dispatch => {
+    const likedBlog = await blogService.like(blogId)
+    dispatch({
+      type: 'LIKE_BLOG',
+      data: {
+        likedBlog
       }
     })
   }

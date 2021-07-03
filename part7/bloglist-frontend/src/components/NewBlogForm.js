@@ -12,7 +12,6 @@ const NewBlogForm = ({ newBlogFormRef }) => {
 
   const addBlog = async (newObject) => {
     try {
-      // this doesn't work currently
       newBlogFormRef.current.toggleVisibility()
       dispatch(createBlog(newObject))
       dispatch(notificationSuccess(`Successfully added ${newObject.title} by ${newObject.author}`))

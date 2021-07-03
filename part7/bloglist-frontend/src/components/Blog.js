@@ -1,17 +1,22 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
+import { useDispatch } from 'react-redux'
+import { likeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, currentUsername, updateBlog, removeBlog }) => {
+const Blog = ({ blog, currentUsername, removeBlog }) => {
   const [showDetails, setShowDetails] = useState(false)
+
+  const dispatch = useDispatch()
 
   const toggleDetails = () => {
     setShowDetails(!showDetails)
   }
 
   const handleLike = async () => {
-    updateBlog()
-    await blogService.like(blog.id, blog.likes + 1)
+    // updateBlog()
+    // await blogService.like(blog.id, blog.likes + 1)
+    dispatch(likeBlog(blog.id))
   }
 
   const handleDelete = async () => {

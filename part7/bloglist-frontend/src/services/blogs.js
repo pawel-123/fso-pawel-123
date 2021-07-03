@@ -29,14 +29,19 @@ const remove = async (blogId) => {
   return response.data
 }
 
-const like = async (blogId, newLikes) => {
-  const newObject = {
-    likes: newLikes
-  }
-
-  const response = await axios.put(`${baseUrl}/${blogId}`, newObject)
+const like = async blogId => {
+  const response = await axios.put(`${baseUrl}/${blogId}`)
   return response.data
 }
+
+// const like = async (blogId, newLikes) => {
+//   const newObject = {
+//     likes: newLikes
+//   }
+
+//   const response = await axios.put(`${baseUrl}/${blogId}`, newObject)
+//   return response.data
+// }
 
 const blogService = {
   setToken, getAll, create, remove, like
