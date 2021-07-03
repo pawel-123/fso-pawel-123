@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from '../reducers/blogReducer'
 import Blog from './Blog'
 
-const Blogs = ({ currentUsername }) => {
+const Blogs = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
 
@@ -17,7 +17,6 @@ const Blogs = ({ currentUsername }) => {
         <Blog
           key={blog.id}
           blog={blog}
-          currentUsername={currentUsername}
         />
       )}
     </div>

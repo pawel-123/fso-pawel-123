@@ -6,15 +6,16 @@ import ErrorBox from './components/ErrorBox'
 import SuccessBox from './components/SuccessBox'
 import Togglable from './components/Togglable'
 import loginService from './services/login'
-import blogService from './services/blogs'
+import { setUser, removeUser } from './reducers/userReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { notificationError, notificationSuccess } from './reducers/notificationReducer'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+
+  const user = useSelector(state => state.user)
 
   const newBlogFormRef = useRef()
   const dispatch = useDispatch()
@@ -24,12 +25,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
+    dispatch(setUser())
   }, [])
 
   const loginForm = () => (
@@ -47,9 +43,7 @@ const App = () => {
           <NewBlogForm newBlogFormRef={newBlogFormRef}/>
         </Togglable>
         <p>{user.name} logged in <button onClick={handleLogout}>Log out</button></p>
-        <Blogs
-          currentUsername={user.username}
-        />
+        <Blogs />
       </div>
     )
   }
@@ -59,9 +53,8 @@ const App = () => {
 
     try {
       const user = await loginService.login({ username, password })
-      blogService.setToken(user.token)
       window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
-      setUser(user)
+      dispatch(setUser())
       setUsername('')
       setPassword('')
       dispatch(notificationSuccess('successfully logged in'))
@@ -77,8 +70,7 @@ const App = () => {
   }
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBloglistUser')
-    setUser(null)
+    dispatch(removeUser())
   }
 
   return (
