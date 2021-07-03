@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 import { notificationError, notificationSuccess } from '../reducers/notificationReducer'
 
-const NewBlogForm = () => {
+const NewBlogForm = ({ newBlogFormRef }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -13,7 +13,7 @@ const NewBlogForm = () => {
   const addBlog = async (newObject) => {
     try {
       // this doesn't work currently
-      // newBlogFormRef.current.toggleVisibility()
+      newBlogFormRef.current.toggleVisibility()
       dispatch(createBlog(newObject))
       dispatch(notificationSuccess(`Successfully added ${newObject.title} by ${newObject.author}`))
       setTimeout(() => {
