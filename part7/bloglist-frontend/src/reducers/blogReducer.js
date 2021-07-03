@@ -7,8 +7,13 @@ const blogReducer = (state = [], action) => {
     case 'NEW_BLOG':
       return [...state, action.data.newBlog]
     case 'LIKE_BLOG': {
-      const likedBlog = action.data.likedBlog
-      return state.map(blog => likedBlog.id === blog.id ? likedBlog : blog)
+      const { blogId, newLikes } = action.data
+
+      return state.map(blog => {
+        return blogId === blog.id
+          ? { ...blog, likes: newLikes }
+          : blog
+      })
     }
     case 'DELETE_BLOG':
       return state.filter(blog => blog.id !== action.data.blogId)
@@ -48,7 +53,8 @@ export const likeBlog = blogId => {
     dispatch({
       type: 'LIKE_BLOG',
       data: {
-        likedBlog
+        blogId,
+        newLikes: likedBlog.likes
       }
     })
   }
