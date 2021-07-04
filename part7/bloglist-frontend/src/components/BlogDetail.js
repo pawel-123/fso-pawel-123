@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+import BlogComments from './BlogComments'
 
 const BlogDetail = ({ blog }) => {
   const user = useSelector(state => state.user)
@@ -46,6 +47,7 @@ const BlogDetail = ({ blog }) => {
           <li><button className='delete-button' onClick={handleDelete}>delete blog</button></li>
         }
       </ul>
+      <BlogComments blog={blog} />
     </div>
   )
 }
