@@ -3,6 +3,7 @@ import { Switch, Route, Link, Redirect } from 'react-router-dom'
 import Login from './components/Login'
 import Blogs from './components/Blogs'
 import Users from './components/Users'
+import User from './components/User'
 import NewBlogForm from './components/NewBlogForm'
 import ErrorBox from './components/ErrorBox'
 import SuccessBox from './components/SuccessBox'
@@ -17,6 +18,7 @@ const App = () => {
   const [password, setPassword] = useState('')
 
   const user = useSelector(state => state.user)
+  const users = useSelector(state => state.users)
 
   const newBlogFormRef = useRef()
   const dispatch = useDispatch()
@@ -84,6 +86,9 @@ const App = () => {
       <SuccessBox />
 
       <Switch>
+        <Route path='/users/:id'>
+          <User users={users}/>
+        </Route>
         <Route path='/login'>
           {user ? <Redirect to='/' /> : loginSection()}
         </Route>
