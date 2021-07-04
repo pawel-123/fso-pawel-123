@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 import { notificationError, notificationSuccess } from '../reducers/notificationReducer'
 
-const NewBlogForm = ({ newBlogFormRef }) => {
+const NewBlogForm = ({ newBlogFormRef, buttonStyle }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -39,8 +39,17 @@ const NewBlogForm = ({ newBlogFormRef }) => {
     setNewUrl('')
   }
 
+  const formStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    maxWidth: '480px',
+    justifyContent: 'center',
+    margin: '0 auto',
+    fontSize: '0.8rem'
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={formStyle}>
       <label htmlFor="title">title</label>
       <input
         type="text"
@@ -68,7 +77,7 @@ const NewBlogForm = ({ newBlogFormRef }) => {
         onChange={(event) => { setNewUrl(event.target.value) }}
       />
       <br />
-      <button type="submit">Add blog</button>
+      <button type="submit" style={buttonStyle}>Add blog</button>
     </form>
   )
 }

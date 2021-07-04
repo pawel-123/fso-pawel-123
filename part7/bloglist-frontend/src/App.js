@@ -41,7 +41,7 @@ const App = () => {
 
   const loginSection = () => (
     <div>
-      <h2>Log in to application</h2>
+      <h2 style={headerStyle}>Log in to application</h2>
       <Login username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLogin={handleLogin} />
     </div>
   )
@@ -49,9 +49,9 @@ const App = () => {
   const blogSection = () => {
     return (
       <div>
-        <h2>blogs</h2>
-        <Togglable buttonLabel='new blog form' ref={newBlogFormRef}>
-          <NewBlogForm newBlogFormRef={newBlogFormRef}/>
+        <h2 style={headerStyle}>blogs</h2>
+        <Togglable buttonLabel='new blog form' ref={newBlogFormRef} buttonStyle={buttonStyle}>
+          <NewBlogForm newBlogFormRef={newBlogFormRef} buttonStyle={buttonStyle}/>
         </Togglable>
         <Blogs />
       </div>
@@ -83,14 +83,57 @@ const App = () => {
     dispatch(removeUser())
   }
 
+  const rootStyle = {
+    backgroundColor: '#E5E7EB',
+    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+    display: 'flex',
+    flexDirection: 'column'
+  }
+
+  const navStyle = {
+    backgroundColor: '#FDE68A',
+    display: 'flex',
+    padding: '0.5em 1em',
+    alignItems: 'center'
+  }
+
+  const navItemStyle = {
+    padding: '0 0.5em',
+    textDecoration: 'none',
+    color: 'black',
+  }
+
+  const userStyle = {
+    marginLeft: 'auto',
+    fontSize: '0.75rem'
+  }
+
+  const buttonStyle = {
+    backgroundColor: '#34D399',
+    color: 'white',
+    padding: '0.5em 1em',
+    fontWeight: 'bold',
+    border: 'none',
+    margin: '0 1em',
+    maxWidth: '200px',
+    alignSelf: 'center'
+  }
+
+  const headerStyle = {
+    fontSize: '1.5 em',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    textTransform: 'uppercase'
+  }
+
   return (
-    <div>
-      <nav>
-        <Link to='/'>Blogs</Link>
-        <Link to='/users'>Users</Link>
+    <div style={rootStyle}>
+      <nav style={navStyle}>
+        <Link to='/' style={navItemStyle}>Blogs</Link>
+        <Link to='/users' style={navItemStyle}>Users</Link>
         {user
-          ? <span>{user.name} logged in<button onClick={handleLogout}>Log out</button></span>
-          : <Link to='/login'>Login</Link>
+          ? <span style={userStyle}>{user.name} logged in<button style={buttonStyle} onClick={handleLogout}>Log out</button></span>
+          : <Link to='/login' style={userStyle}>Login</Link>
         }
       </nav>
       <ErrorBox />

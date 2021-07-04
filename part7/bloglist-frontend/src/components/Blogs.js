@@ -11,8 +11,14 @@ const Blogs = () => {
     dispatch(initializeBlogs())
   }, [])
 
+  const blogListStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  }
+
   return (
-    <div>
+    <div style={blogListStyle}>
       {blogs.map(blog =>
         <Blog
           key={blog.id}
