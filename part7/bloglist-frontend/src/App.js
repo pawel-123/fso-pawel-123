@@ -37,7 +37,6 @@ const App = () => {
 
   useEffect(() => {
     dispatch(setUser())
-    console.log('user in useEffect :', user)
   }, [])
 
   const loginSection = () => (
@@ -54,7 +53,6 @@ const App = () => {
         <Togglable buttonLabel='new blog form' ref={newBlogFormRef}>
           <NewBlogForm newBlogFormRef={newBlogFormRef}/>
         </Togglable>
-        <p>{user.name} logged in <button onClick={handleLogout}>Log out</button></p>
         <Blogs />
       </div>
     )
@@ -85,15 +83,16 @@ const App = () => {
     dispatch(removeUser())
   }
 
-  console.log('user just before return :', user)
-
   return (
     <div>
-      <div>
+      <nav>
         <Link to='/'>Blogs</Link>
-        <Link to='/login'>Login</Link>
         <Link to='/users'>Users</Link>
-      </div>
+        {user
+          ? <span>{user.name} logged in<button onClick={handleLogout}>Log out</button></span>
+          : <Link to='/login'>Login</Link>
+        }
+      </nav>
       <ErrorBox />
       <SuccessBox />
 
