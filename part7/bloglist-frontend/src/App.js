@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Switch, Route, Link, Redirect } from 'react-router-dom'
+import { Switch, Route, Link, Redirect, useRouteMatch } from 'react-router-dom'
 import Login from './components/Login'
 import Blogs from './components/Blogs'
+import BlogDetail from './components/BlogDetail'
 import Users from './components/Users'
 import User from './components/User'
 import NewBlogForm from './components/NewBlogForm'
@@ -19,6 +20,17 @@ const App = () => {
 
   const user = useSelector(state => state.user)
   const users = useSelector(state => state.users)
+  const blogs = useSelector(state => state.blogs)
+
+  const userMatch = useRouteMatch('/users/:id')
+  const selectedUser = userMatch
+    ? users.find(user => user.id === userMatch.params.id)
+    : null
+
+  const blogMatch = useRouteMatch('/blogs/:id')
+  const blog = blogMatch
+    ? blogs.find(blog => blog.id === blogMatch.params.id)
+    : null
 
   const newBlogFormRef = useRef()
   const dispatch = useDispatch()
@@ -87,13 +99,16 @@ const App = () => {
 
       <Switch>
         <Route path='/users/:id'>
-          <User users={users}/>
-        </Route>
-        <Route path='/login'>
-          {user ? <Redirect to='/' /> : loginSection()}
+          <User user={selectedUser}/>
         </Route>
         <Route path='/users'>
           <Users />
+        </Route>
+        <Route path='/blogs/:id'>
+          <BlogDetail blog={blog}/>
+        </Route>
+        <Route path='/login'>
+          {user ? <Redirect to='/' /> : loginSection()}
         </Route>
         <Route path='/'>
           {user === null ? <Redirect to='/login' /> : blogSection()}
