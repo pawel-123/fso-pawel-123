@@ -158,7 +158,14 @@ const resolvers = {
   },
   Mutation: {
     addBook: (root, args) => {
-      if (!authors.includes(args.author)) {
+      // if (!authors.includes(args.author)) {
+      //   authors = authors.concat({
+      //     name: args.author,
+      //     id: uuidv4()
+      //   })
+      // }
+
+      if (!authors.find(author => author.name === args.author)) {
         authors = authors.concat({
           name: args.author,
           id: uuidv4()
@@ -181,7 +188,6 @@ const resolvers = {
 
       if (authorToEdit && args.setBornTo) {
         const editedAuthor = { ...authorToEdit, born: args.setBornTo }
-        console.log('editedAuthor :', editedAuthor)
         authors = authors.map(author => author.name === args.name ? editedAuthor : author)
         return editedAuthor
       }
