@@ -2,6 +2,12 @@
   import EditAuthor from './EditAuthor'
 
 const Authors = ({ show, authors }) => {
+  // const options = authors.map(author => {
+  //   return {
+  //     value: author.name, label: author.name
+  //   }
+  // })
+  
   if (!show) {
     return null
   }
@@ -29,7 +35,7 @@ const Authors = ({ show, authors }) => {
           )}
         </tbody>
       </table>
-      <EditAuthor />
+      <EditAuthor authors={authors}/>
     </div>
   )
 }

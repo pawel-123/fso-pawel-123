@@ -10,6 +10,10 @@ const App = () => {
   const booksResult = useQuery(ALL_BOOKS)
   const authorsResult = useQuery(ALL_AUTHORS)
 
+  if (booksResult.loading || authorsResult.loading) {
+    return null
+  }
+
   return (
     <div>
       <div>
