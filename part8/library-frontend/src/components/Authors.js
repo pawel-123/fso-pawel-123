@@ -1,13 +1,7 @@
   import React from 'react'
   import EditAuthor from './EditAuthor'
 
-const Authors = ({ show, authors }) => {
-  // const options = authors.map(author => {
-  //   return {
-  //     value: author.name, label: author.name
-  //   }
-  // })
-  
+const Authors = ({ show, authors }) => {  
   if (!show) {
     return null
   }
