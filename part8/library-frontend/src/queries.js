@@ -17,7 +17,9 @@ export const ALL_BOOKS = gql`
       title
       id
       published
-      author
+      author {
+        name
+      }
     }
   }
 `
