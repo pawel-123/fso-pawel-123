@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import { useQuery, useApolloClient } from '@apollo/client'
+import { useQuery, useLazyQuery, useApolloClient } from '@apollo/client'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
-import { ALL_AUTHORS, ALL_BOOKS, ALL_GENRES } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_GENRES, ME } from './queries'
 
 const App = () => {
   const [page, setPage] = useState('')
   const [token, setToken] = useState(null)
   const [books, setBooks] = useState(null)
+  const [myBooks, setMyBooks] = useState(null)
   const [genreToFilter, setGenreToFilter] = useState(null)
   const [displayedBooks, setDisplayedBooks] = useState(null)
 
   const booksResult = useQuery(ALL_BOOKS)
   const authorsResult = useQuery(ALL_AUTHORS)
   const genresResult = useQuery(ALL_GENRES)
-  // const meResult = useQuery(ME)
+  const meResult = useQuery(ME)
+  const [getRecos, recosResult] = useLazyQuery(ALL_BOOKS)
 
   const client = useApolloClient()
 
@@ -43,6 +45,19 @@ const App = () => {
     }
   }, [genreToFilter, books])
 
+  useEffect(() => {
+    if (recosResult.data) {
+      setMyBooks(recosResult.data.allBooks)
+    }
+  }, [recosResult])
+
+  const getRecommendations = () => {
+    if (meResult.data) {
+      console.log('getting recos')
+      getRecos({ variables: { genre: meResult.data.me.favoriteGenre } })
+    }
+  }
+
   const logout = () => {
     setToken(null)
     localStorage.clear()
@@ -66,6 +81,7 @@ const App = () => {
         { token && <button onClick={() => setPage('add')}>add book</button> }
         { token && <button onClick={() => {
           // setGenreToFilter(meResult.data ? meResult.data.me.favoriteGenre : null)
+          getRecommendations()
           setPage('recommendations')
         }}>recommendations</button> }
         { token && <button onClick={logout}>logout</button>}
@@ -97,8 +113,8 @@ const App = () => {
 
       <Recommendations
         show={page === 'recommendations'}
-        books={displayedBooks || []}
-        genreToFilter={genreToFilter}
+        books={myBooks || []}
+        favoriteGenre={meResult.data ? meResult.data.me.favoriteGenre : ''}
       />
 
     </div>
