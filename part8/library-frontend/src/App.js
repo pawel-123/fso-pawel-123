@@ -5,7 +5,7 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
-import { ALL_AUTHORS, ALL_BOOKS, ALL_GENRES, ME } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_GENRES } from './queries'
 
 const App = () => {
   const [page, setPage] = useState('')
@@ -17,7 +17,7 @@ const App = () => {
   const booksResult = useQuery(ALL_BOOKS)
   const authorsResult = useQuery(ALL_AUTHORS)
   const genresResult = useQuery(ALL_GENRES)
-  const meResult = useQuery(ME)
+  // const meResult = useQuery(ME)
 
   const client = useApolloClient()
 
@@ -65,7 +65,7 @@ const App = () => {
         { !token && <button onClick={() => setPage('login')}>login</button> }
         { token && <button onClick={() => setPage('add')}>add book</button> }
         { token && <button onClick={() => {
-          setGenreToFilter(meResult.data ? meResult.data.me.favoriteGenre : null)
+          // setGenreToFilter(meResult.data ? meResult.data.me.favoriteGenre : null)
           setPage('recommendations')
         }}>recommendations</button> }
         { token && <button onClick={logout}>logout</button>}
