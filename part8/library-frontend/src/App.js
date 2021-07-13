@@ -4,14 +4,20 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
-import { ALL_AUTHORS, ALL_BOOKS } from './queries'
+import Recommendations from './components/Recommendations'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_GENRES, ME } from './queries'
 
 const App = () => {
   const [page, setPage] = useState('')
   const [token, setToken] = useState(null)
+  const [books, setBooks] = useState(null)
+  const [genreToFilter, setGenreToFilter] = useState(null)
+  const [displayedBooks, setDisplayedBooks] = useState(null)
 
   const booksResult = useQuery(ALL_BOOKS)
   const authorsResult = useQuery(ALL_AUTHORS)
+  const genresResult = useQuery(ALL_GENRES)
+  const meResult = useQuery(ME)
 
   const client = useApolloClient()
 
@@ -22,6 +28,21 @@ const App = () => {
     }
   }, [])
 
+  useEffect(() => {
+    if (booksResult.data) {
+      setBooks(booksResult.data.allBooks)
+    }
+  }, [booksResult])
+
+  useEffect(() => {
+    if (genreToFilter) {
+      const filteredBooks = genreToFilter 
+        ? books.filter(book => book.genres.includes(genreToFilter)) 
+        : books
+      setDisplayedBooks(filteredBooks)
+    }
+  }, [genreToFilter, books])
+
   const logout = () => {
     setToken(null)
     localStorage.clear()
@@ -29,7 +50,7 @@ const App = () => {
     setPage('login')
   }
 
-  if (booksResult.loading || authorsResult.loading) {
+  if (booksResult.loading || authorsResult.loading || genresResult.loading) {
     return null
   }
 
@@ -37,9 +58,16 @@ const App = () => {
     <div>
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
-        <button onClick={() => setPage('books')}>books</button>
+        <button onClick={() => {
+          setGenreToFilter(null)
+          setPage('books')
+        }}>books</button>
         { !token && <button onClick={() => setPage('login')}>login</button> }
         { token && <button onClick={() => setPage('add')}>add book</button> }
+        { token && <button onClick={() => {
+          setGenreToFilter(meResult.data ? meResult.data.me.favoriteGenre : null)
+          setPage('recommendations')
+        }}>recommendations</button> }
         { token && <button onClick={logout}>logout</button>}
       </div>
 
@@ -50,7 +78,10 @@ const App = () => {
 
       <Books
         show={page === 'books'}
-        books={booksResult.data ? booksResult.data.allBooks : []}
+        books={genreToFilter ? displayedBooks : books}
+        genres={genresResult.data ? genresResult.data.allGenres : []}
+        genreToFilter={genreToFilter}
+        setGenreToFilter={setGenreToFilter}
       />
 
       <LoginForm 
@@ -62,6 +93,12 @@ const App = () => {
       <NewBook
         show={page === 'add'}
         setPage={setPage}
+      />
+
+      <Recommendations
+        show={page === 'recommendations'}
+        books={displayedBooks || []}
+        genreToFilter={genreToFilter}
       />
 
     </div>

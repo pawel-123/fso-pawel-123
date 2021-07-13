@@ -47,6 +47,7 @@ const typeDefs = gql`
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
     me: User
+    allGenres: [String!]!
   }
 
   type Mutation {
@@ -94,7 +95,15 @@ const resolvers = {
       return filteredBooks
     },
     allAuthors: () => Author.find({}),
-    me: (root, args, context) => context.currentUser 
+    me: (root, args, context) => context.currentUser,
+    allGenres: async() => {
+      const books = await Book.find({})
+      const genres = books.flatMap(book => book.genres)
+      const uniqueGenres = genres.filter((genre, index) => {
+        return genres.indexOf(genre) === index
+      })
+      return uniqueGenres
+    }
   },
   Author: {
     bookCount: (root) => Book.count({ author: root._id })
@@ -136,7 +145,7 @@ const resolvers = {
 
       return book
     },
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, context) => {
       if (!context.currentUser) {
         throw new AuthenticationError('not authenticated')
       }

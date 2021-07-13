@@ -1,6 +1,8 @@
 import React from 'react'
+import GenreFilter from './GenreFilter'
+import BooksTable from './BooksTable'
 
-const Books = ({ show, books }) => {
+const Books = ({ show, books, genres, genreToFilter, setGenreToFilter }) => {
   if (!show) {
     return null
   }
@@ -8,27 +10,9 @@ const Books = ({ show, books }) => {
   return (
     <div>
       <h2>books</h2>
-
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>
-              author
-            </th>
-            <th>
-              published
-            </th>
-          </tr>
-          {books.map(a =>
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <p>genres: {genreToFilter || 'all'}</p>
+      <GenreFilter genres={genres} setGenreToFilter={setGenreToFilter} />
+      <BooksTable books={books} />
     </div>
   )
 }
