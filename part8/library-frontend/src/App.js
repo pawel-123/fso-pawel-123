@@ -12,13 +12,14 @@ const App = () => {
   const [token, setToken] = useState(null)
   const [books, setBooks] = useState(null)
   const [myBooks, setMyBooks] = useState(null)
+  const [user, setUser] = useState(null)
   const [genreToFilter, setGenreToFilter] = useState(null)
   const [displayedBooks, setDisplayedBooks] = useState(null)
 
   const booksResult = useQuery(ALL_BOOKS)
   const authorsResult = useQuery(ALL_AUTHORS)
   const genresResult = useQuery(ALL_GENRES)
-  const meResult = useQuery(ME)
+  const meResult = useQuery(ME, { fetchPolicy: "no-cache" })
   const [getRecos, recosResult] = useLazyQuery(ALL_BOOKS)
 
   const client = useApolloClient()
@@ -51,10 +52,15 @@ const App = () => {
     }
   }, [recosResult])
 
+  useEffect(() => {
+    if (meResult.data && token) {
+      setUser(meResult.data.me)
+    }
+  }, [meResult, token])
+
   const getRecommendations = () => {
-    if (meResult.data) {
-      console.log('getting recos')
-      getRecos({ variables: { genre: meResult.data.me.favoriteGenre } })
+    if (user) {
+      getRecos({ variables: { genre: user.favoriteGenre } })
     }
   }
 
@@ -81,12 +87,13 @@ const App = () => {
 
   const logout = () => {
     setToken(null)
+    setUser(null)
     localStorage.clear()
     client.resetStore()
     setPage('login')
   }
 
-  if (booksResult.loading || authorsResult.loading || genresResult.loading) {
+  if (booksResult.loading || authorsResult.loading || genresResult.loading || meResult.loading) {
     return null
   }
 
@@ -107,6 +114,8 @@ const App = () => {
         }}>recommendations</button> }
         { token && <button onClick={logout}>logout</button>}
       </div>
+
+      <p>current user: {user ? user.username : 'n/a'}</p>
 
       <Authors
         show={page === 'authors'}
@@ -136,7 +145,7 @@ const App = () => {
       <Recommendations
         show={page === 'recommendations'}
         books={myBooks || []}
-        favoriteGenre={meResult.data ? meResult.data.me.favoriteGenre : ''}
+        favoriteGenre={user ? user.favoriteGenre : ''}
       />
 
     </div>

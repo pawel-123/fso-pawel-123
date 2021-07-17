@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
-import { ALL_AUTHORS, ALL_BOOKS, LOGIN } from '../queries'
+import { ALL_AUTHORS, ALL_BOOKS, LOGIN, ME } from '../queries'
 
 const LoginForm = ({ show, setToken, setPage }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   
   const [login, result] = useMutation(LOGIN, {
-    refetchQueries: [ {query: ALL_BOOKS}, {query: ALL_AUTHORS} ]
+    refetchQueries: [ {query: ALL_BOOKS}, {query: ALL_AUTHORS}, {query: ME} ]
   })
 
   useEffect(() => {
@@ -24,7 +24,8 @@ const LoginForm = ({ show, setToken, setPage }) => {
     await login({ variables: { username, password } })
     setUsername('')
     setPassword('')
-    setPage('authors')
+    const currentUrl = window.location.href
+    window.location.href = currentUrl
   }
 
   if (!show) {

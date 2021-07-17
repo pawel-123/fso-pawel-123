@@ -99,8 +99,12 @@ const resolvers = {
 
       return filteredBooks
     },
-    allAuthors: () => Author.find({}),
-    me: (root, args, context) => context.currentUser,
+    allAuthors: () => {
+      return Author.find({})
+    }, 
+    me: (root, args, context) => {
+      return context.currentUser
+    },
     allGenres: async() => {
       const books = await Book.find({})
       const genres = books.flatMap(book => book.genres)
@@ -111,7 +115,9 @@ const resolvers = {
     }
   },
   Author: {
-    bookCount: (root) => Book.count({ author: root._id })
+    bookCount: (root) => {
+      return Book.count({ author: root._id })
+    } 
   },
   Mutation: {
     addBook: async (root, args, context) => {
@@ -145,6 +151,12 @@ const resolvers = {
           invalidArgs: args
         })
       }
+
+      if (author && book) {
+        author.books = author.books.concat(book._id)
+      }
+
+      await author.save()
       
       await book.populate('author').execPopulate()
 
@@ -178,9 +190,6 @@ const resolvers = {
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username })
-
-      console.log('user :', user)
-      console.log('JWT SECRET :', JWT_SECRET)
 
       if (!user || args.password !== 'secret') {
         throw new UserInputError('wrong credentials')
