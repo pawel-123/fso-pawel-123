@@ -1,5 +1,5 @@
 const calculateBmi = (height: number, weight: number): string => {
-  const bmiScore: number = weight / ((height / 100) ** 2)
+  const bmiScore: number = weight / ((height / 100) ** 2);
   if (bmiScore < 16) return 'Underweight (Severe thinness)';
   if (bmiScore >= 16 && bmiScore < 17) return 'Underweight (Moderate thinness)';
   if (bmiScore >= 17 && bmiScore < 18.5) return 'Underweight (Mild thinness)';
