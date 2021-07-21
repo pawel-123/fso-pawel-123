@@ -10,8 +10,8 @@ const parseArguments = (args: Array<string>): PersonalDetails => {
   return {
     height: Number(process.argv[2]),
     weight: Number(process.argv[3])
-  }
-}
+  };
+};
 
 const calculateBmi = (height: number, weight: number): string => {
   const bmiScore: number = weight / ((height / 100) ** 2);
@@ -24,13 +24,13 @@ const calculateBmi = (height: number, weight: number): string => {
   if (bmiScore >= 30 && bmiScore < 35) return 'Obese (Class I)';
   if (bmiScore >= 35 && bmiScore < 40) return 'Obese (Class II)';
   return 'Obese (Class III)';
-}
+};
 
 try {
-  const { height, weight } = parseArguments(process.argv)
-  console.log(calculateBmi(height, weight))
+  const { height, weight } = parseArguments(process.argv);
+  console.log(calculateBmi(height, weight));
 } catch (e) {
-  console.log('Error, something bad happened: ', e.message)
+  console.log('Error, something bad happened: ', e);
 }
 
 export default calculateBmi;
