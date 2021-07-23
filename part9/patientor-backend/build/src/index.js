@@ -12,7 +12,6 @@ app.use(cors());
 app.use(express_1.default.json());
 const PORT = 3000;
 app.get('/api/ping', (_req, res) => {
-    console.log('someone pinged here');
     res.send('pong');
 });
 app.use('/api/diagnoses', diagnoses_1.default);
