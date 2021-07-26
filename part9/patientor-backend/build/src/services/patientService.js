@@ -5,8 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const uuid = require("uuid");
 const patients_1 = __importDefault(require("../../data/patients"));
-// const patients: Patient[] = patientData;
-// const patients: Omit<Patient, 'ssn'>[] = patientData;
 const getNonSensitivePatients = () => {
     return patients_1.default.map(({ id, name, dateOfBirth, gender, occupation }) => ({
         id,
@@ -16,12 +14,16 @@ const getNonSensitivePatients = () => {
         occupation
     }));
 };
+const getPatient = (id) => {
+    return patients_1.default.find(patient => patient.id === id);
+};
 const addPatient = (patient) => {
-    const newPatient = Object.assign({ id: uuid.v1() }, patient);
+    const newPatient = Object.assign({ id: uuid.v1(), entries: [] }, patient);
     patients_1.default.push(newPatient);
     return newPatient;
 };
 exports.default = {
     getNonSensitivePatients,
+    getPatient,
     addPatient
 };

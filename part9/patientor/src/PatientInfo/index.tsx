@@ -4,7 +4,8 @@ import { Icon } from "semantic-ui-react";
 import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
 import { getPatient, useStateValue } from "../state";
-import { Patient } from "../types";
+import { Patient, Entry } from "../types";
+import EntryDetails from "./EntryDetails";
 
 const PatientInfo = () => {
   const[{ currentPatient }, dispatch] = useStateValue();
@@ -43,6 +44,10 @@ const PatientInfo = () => {
       <h2>{currentPatient.name} <Icon name={getGenderIcon(currentPatient.gender)} /></h2>
       <p>ssn: {currentPatient.ssn}</p>
       <p>occupation: {currentPatient.occupation}</p>
+      <h3>entries</h3>
+      {currentPatient.entries.map((entry: Entry) => (
+        <EntryDetails key={entry.id} entry={entry} />
+      ))}
     </div>
   );
 };
