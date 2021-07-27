@@ -6,6 +6,7 @@ import { apiBaseUrl } from "../constants";
 import { getPatient, useStateValue } from "../state";
 import { Patient, Entry } from "../types";
 import EntryDetails from "./EntryDetails";
+import AddEntryForm from "./AddEntryForm";
 
 const PatientInfo = () => {
   const[{ currentPatient }, dispatch] = useStateValue();
@@ -48,6 +49,7 @@ const PatientInfo = () => {
       {currentPatient.entries.map((entry: Entry) => (
         <EntryDetails key={entry.id} entry={entry} />
       ))}
+      <AddEntryForm />
     </div>
   );
 };
