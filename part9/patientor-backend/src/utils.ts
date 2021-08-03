@@ -1,4 +1,4 @@
-import { NewPatient, Gender } from "./types";
+import { NewPatient, Gender, HealthCheckRating, NewEntry, EntryType, Diagnosis } from "./types";
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -62,81 +62,96 @@ export const toNewPatient = ({ name, dateOfBirth, ssn, gender, occupation }: Pat
 };
 
 // V3
-// // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// const isEntryType = (param: any): param is EntryType => {
-//   return Object.values(EntryType).includes(param);
-// };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isEntryType = (param: any): param is EntryType.HealthCheck => {
+  return Object.values(EntryType).includes(param);
+};
 
-// const parseEntryType = (type: unknown): EntryType => {
-//   if (!type || !isEntryType(type)) {
-//     throw new Error('Missing or incorrect entry type: ' + type);
-//   }
-//   return type;
-// };
+const parseEntryType = (type: unknown): EntryType.HealthCheck => {
+  if (!type || !isEntryType(type)) {
+    throw new Error('Missing or incorrect entry type: ' + type);
+  }
+  return type;
+};
 
-// const parseDescription = (description: unknown): string => {
-//   if (!description || !isString(description)) {
-//     throw new Error('Missing or incorrect description');
-//   }
-//   return description;
-// };
+const parseDescription = (description: unknown): string => {
+  if (!description || !isString(description)) {
+    throw new Error('Missing or incorrect description');
+  }
+  return description;
+};
 
-// const parseSpecialist = (specialist: unknown): string => {
-//   if (!specialist || !isString(specialist)) {
-//     throw new Error('Missing or incorrect specialist');
-//   }
-//   return specialist;
-// };
+const parseSpecialist = (specialist: unknown): string => {
+  if (!specialist || !isString(specialist)) {
+    throw new Error('Missing or incorrect specialist');
+  }
+  return specialist;
+};
 
-// const isArray = (codes: unknown): boolean => {
-//   return Array.isArray(codes);
-// };
+const isArray = (codes: unknown): boolean => {
+  return Array.isArray(codes);
+};
 
-// // const parseDiagnosisCodes = (codes: unknown): Array<Diagnosis['code']> => {
-// //   if (!codes || !isArray(codes) || !Array.prototype.every.call(codes, isString)) {
-// //     throw new Error('Missing or incorrect diagnosis codes');
-// //   }
-// //   return codes;
-// // };
+const parseDiagnosisCodes = (codes: unknown): Array<Diagnosis['code']> => {
+  if (!codes || !isArray(codes) || !Array.prototype.every.call(codes, isString)) {
+    throw new Error('Missing or incorrect diagnosis codes');
+  }
+  return codes as Array<Diagnosis['code']>;
+};
 
-// // const isHealthCheckEntry = (entry: unknown): entry is Omit<HealthCheckEntry, 'id'> => {
+// const isHealthCheckEntry = (entry: unknown): entry is Omit<HealthCheckEntry, 'id'> => {
 
-// // }
+// }
 
-// // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// const isHealthCheckRating = (param: any): param is HealthCheckRating => {
-//   return Object.values(param).includes(param);
-// };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isHealthCheckRating = (param: any): param is HealthCheckRating => {
+  return Object.values(HealthCheckRating).includes(param);
+};
 
-// const parseHealthCheckRating = (rating: unknown): HealthCheckRating => {
-//   if (!rating || !isHealthCheckRating(rating)) {
-//     throw new Error('Missing or incorrect health check rating');
-//   }
-//   return rating;
-// };
+const parseHealthCheckRating = (rating: unknown): HealthCheckRating => {
+  if (!rating || !isHealthCheckRating(rating)) {
+    throw new Error('Missing or incorrect health check rating');
+  }
+  return rating;
+};
 
-// // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// export const toNewEntry = (entry: any): NewEntry => {
-//   if (!entry || !entry.type) {
-//     throw new Error('Missing or incorrect entry');
-//   }
+type EntryFields = { description: unknown, date: unknown, specialist: unknown, type: unknown, healthCheckRating: unknown, diagnosisCodes?: unknown };
 
-//   switch(entry.type) {
-//     case EntryType.HealthCheck:
-//       const newEntry: NewEntry = {
-//         type: parseEntryType(entry.type),
-//         description: parseDescription(entry.description),
-//         date: parseDate(entry.date),
-//         specialist: parseSpecialist(entry.specialist),
-//         healthCheckRating: parseHealthCheckRating(entry.healthCheckRating)
-//       };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const toNewEntry = ({ description, date, specialist, type, healthCheckRating, diagnosisCodes }: EntryFields): NewEntry => {
+  if (!type) {
+    throw new Error('Missing or incorrect entry');
+  }
+
+  // switch(type) {
+  //   case EntryType.HealthCheck:
+  //     const newEntry: NewEntry = {
+  //       type: parseEntryType(type),
+  //       description: parseDescription(description),
+  //       date: parseDate(date),
+  //       specialist: parseSpecialist(specialist),
+  //       healthCheckRating: parseHealthCheckRating(healthCheckRating)
+  //     };
     
-//       if (entry.diagnosisCodes && isArray(entry.diagnosisCodes)) {
-//         newEntry.diagnosisCodes = entry.diagnosisCodes;
-//       }
-//       return newEntry;
-//   }
-// };
+  //     if (diagnosisCodes && isArray(diagnosisCodes)) {
+  //       newEntry.diagnosisCodes = diagnosisCodes;
+  //     }
+  //     return newEntry;
+  // }
+
+  const newEntry: NewEntry = {
+    type: parseEntryType(type),
+    description: parseDescription(description),
+    date: parseDate(date),
+    specialist: parseSpecialist(specialist),
+    healthCheckRating: parseHealthCheckRating(healthCheckRating)
+  };
+
+  if (diagnosisCodes && isArray(diagnosisCodes)) {
+    newEntry.diagnosisCodes = parseDiagnosisCodes(diagnosisCodes);
+  }
+  return newEntry;
+};
 
 // V2
 
