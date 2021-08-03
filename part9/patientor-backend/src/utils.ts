@@ -99,10 +99,6 @@ const parseDiagnosisCodes = (codes: unknown): Array<Diagnosis['code']> => {
   return codes as Array<Diagnosis['code']>;
 };
 
-// const isHealthCheckEntry = (entry: unknown): entry is Omit<HealthCheckEntry, 'id'> => {
-
-// }
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isHealthCheckRating = (param: any): param is HealthCheckRating => {
   return Object.values(HealthCheckRating).includes(param);
@@ -115,29 +111,20 @@ const parseHealthCheckRating = (rating: unknown): HealthCheckRating => {
   return rating;
 };
 
-type EntryFields = { description: unknown, date: unknown, specialist: unknown, type: unknown, healthCheckRating: unknown, diagnosisCodes?: unknown };
+type EntryFields = { 
+  description: unknown, 
+  date: unknown, 
+  specialist: unknown, 
+  type: unknown, 
+  healthCheckRating: unknown, 
+  diagnosisCodes?: unknown
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toNewEntry = ({ description, date, specialist, type, healthCheckRating, diagnosisCodes }: EntryFields): NewEntry => {
   if (!type) {
     throw new Error('Missing or incorrect entry');
   }
-
-  // switch(type) {
-  //   case EntryType.HealthCheck:
-  //     const newEntry: NewEntry = {
-  //       type: parseEntryType(type),
-  //       description: parseDescription(description),
-  //       date: parseDate(date),
-  //       specialist: parseSpecialist(specialist),
-  //       healthCheckRating: parseHealthCheckRating(healthCheckRating)
-  //     };
-    
-  //     if (diagnosisCodes && isArray(diagnosisCodes)) {
-  //       newEntry.diagnosisCodes = diagnosisCodes;
-  //     }
-  //     return newEntry;
-  // }
 
   const newEntry: NewEntry = {
     type: parseEntryType(type),
@@ -150,81 +137,6 @@ export const toNewEntry = ({ description, date, specialist, type, healthCheckRat
   if (diagnosisCodes && isArray(diagnosisCodes)) {
     newEntry.diagnosisCodes = parseDiagnosisCodes(diagnosisCodes);
   }
+
   return newEntry;
 };
-
-// V2
-
-// // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// const isEntryType = (param: any): param is EntryType => {
-//   return Object.values(EntryType).includes(param);
-// };
-
-// const parseEntryType = (type: unknown): EntryType => {
-//   if (!type || !isEntryType(type)) {
-//     throw new Error('Missing or incorrect entry type: ' + type);
-//   }
-//   return type;
-// };
-
-// const parseDescription = (description: unknown): string => {
-//   if (!description || !isString(description)) {
-//     throw new Error('Missing or incorrect description');
-//   }
-//   return description;
-// };
-
-// const parseSpecialist = (specialist: unknown): string => {
-//   if (!specialist || !isString(specialist)) {
-//     throw new Error('Missing or incorrect specialist');
-//   }
-//   return specialist;
-// };
-
-// const isArray = (codes: unknown): boolean => {
-//   return Array.isArray(codes);
-// };
-
-// const parseDiagnosisCodes = (codes: unknown): Array<Diagnosis['code']> => {
-//   if (!codes || !isArray(codes) || !Array.prototype.every.call(codes, isString)) {
-//     throw new Error('Missing or incorrect diagnosis codes');
-//   }
-//   return codes;
-// };
-
-// type EntryFields = { description: unknown, date: unknown, specialist: unknown, type: unknown };
-
-// export const toNewEntry = ({ type, description, date, specialist }: EntryFields): NewEntry => {
-
-
-
-//   const newEntry = {
-//     type: parseEntryType(type),
-//     description: parseDescription(description),
-//     date: parseDate(date),
-//     specialist: parseSpecialist(specialist)
-//   };
-
-
-//   switch(type) {
-//     case "HealthCheck":
-      
-//   }
-//   return newEntry;
-// };
-
-// V1
-
-// export const toNewEntry = (entry: unknown): NewEntry => {
-//   if (!entry || typeof entry !== "object" || entry === null) {
-//     throw new Error('Missing or incorrect entry: ' + entry);
-//   }
-//   if (!Object.prototype.hasOwnProperty.call(entry, "type") || !isEntryType(entry.type)) {
-//     throw new Error('Missing or incorrect entry type: ' + entry);
-//   }
-
-
-//   const newEntry: NewEntry = entry;
-//   return newEntry;
-// };
-
