@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import { Button } from "semantic-ui-react";
+import { Button, Segment } from "semantic-ui-react";
 import { DiagnosisSelection, NumberField, TextField } from "../AddPatientModal/FormField";
 import { apiBaseUrl } from "../constants";
 import { addEntry, useStateValue } from "../state";
@@ -9,14 +9,13 @@ import { Entry, EntryType, HealthCheckRating } from "../types";
 
 const AddEntryForm = () => {
   const [{ diagnoses, currentPatient }, dispatch] = useStateValue();
+  const [error, setError] = React.useState<string | undefined>();
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (values: any) => {
     if (!currentPatient) {
       throw new Error('Missing patient info');
     }
-    console.log('form submitted');
-    console.log('values: ', values);
 
     try {
       const { data: newEntry } = await axios.post<Entry>(
@@ -25,13 +24,16 @@ const AddEntryForm = () => {
       );
       dispatch(addEntry(newEntry, currentPatient));
     } catch (e) {
+      console.log('e.response: ', e.response);
       console.error(e.response?.data || 'Unknown error');
+      setError(e.response?.data || 'Unknown error');
     }
   };
   
   return (
     <div>
       <h2>Add a new entry</h2>
+      {error && <Segment inverted color="red">{`Error: ${error}`}</Segment>}
       <Formik
         initialValues={{
           description: "",
